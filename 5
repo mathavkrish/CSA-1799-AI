@@ -1,0 +1,55 @@
+def is_valid_state(state):
+    left_bank = state[:3]
+    right_bank = state[3:]
+    # Check if there are more cannibals than missionaries on either bank
+    if (left_bank[1] > left_bank[0] > 0) or (right_bank[1] > right_bank[0] > 0):
+        return False
+    return True
+
+def is_goal_state(state, goal):
+    return state == goal
+
+def generate_next_states(state, visited_states):
+    next_states = []
+    moves = [(1, 0), (2, 0), (0, 1), (0, 2), (1, 1)]
+
+    for move in moves:
+        new_state = tuple(state[i] + move[i] for i in range(6))
+        if all(0 <= x <= 3 for x in new_state) and is_valid_state(new_state) and new_state not in visited_states:
+            next_states.append(new_state)
+
+    return next_states
+
+def dfs(current_state, goal_state, visited_states, path):
+    visited_states.add(current_state)
+
+    if is_goal_state(current_state, goal_state):
+        return path
+
+    next_states = generate_next_states(current_state, visited_states)
+
+    for next_state in next_states:
+        result = dfs(next_state, goal_state, visited_states, path + [next_state])
+
+        if result:
+            return result
+
+    return None
+
+def print_solution(solution):
+    for state in solution:
+        left_bank = state[:3]
+        right_bank = state[3:]
+        print(f"Left Bank: {left_bank[0]}M {left_bank[1]}C | Right Bank: {right_bank[0]}M {right_bank[1]}C")
+
+# Example usage:
+initial_state = (3, 3, 1, 0, 0, 0)
+goal_state = (0, 0, 0, 3, 3, 1)
+visited_states = set()
+solution_path = dfs(initial_state, goal_state, visited_states, [initial_state])
+
+if solution_path:
+    print("Solution:")
+    print_solution(solution_path)
+else:
+    print("No solution found.")
