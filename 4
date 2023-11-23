@@ -1,0 +1,31 @@
+from itertools import permutations
+
+def is_valid_assignment(assignment, puzzle):
+    return all(assignment[char] != 0 for char in puzzle)
+
+def evaluate_expression(expression, assignment):
+    return int(''.join(str(assignment[char]) for char in expression))
+
+def solve_cryptarithmetic(puzzle):
+    unique_chars = set(char for word in puzzle for char in word)
+    if len(unique_chars) > 10:
+        return "Invalid puzzle: Too many unique characters (more than 10)."
+
+    for perm in permutations(range(10), len(unique_chars)):
+        assignment = dict(zip(unique_chars, perm))
+        if is_valid_assignment(assignment, puzzle):
+            left_operand = evaluate_expression(puzzle[0], assignment)
+            right_operand = evaluate_expression(puzzle[1], assignment)
+            result = evaluate_expression(puzzle[2], assignment)
+
+            if left_operand + right_operand == result:
+                return assignment
+
+    return "No solution found."
+
+# Example usage:
+puzzle = ["SEND", "MORE", "MONEY"]
+solution = solve_cryptarithmetic(puzzle)
+print("Cryptarithmetic Puzzle Solution:")
+for word in puzzle:
+    print(f"{word}: {' + '.join(str(solution[char]) for char in word)} = {evaluate_expression(word, solution)}")
