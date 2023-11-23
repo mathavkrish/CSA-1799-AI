@@ -1,0 +1,35 @@
+def gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return a
+
+def can_measure(target, jug1_capacity, jug2_capacity):
+    return target % gcd(jug1_capacity, jug2_capacity) == 0
+
+def water_jug_problem(jug1_capacity, jug2_capacity, target):
+    if target > jug1_capacity + jug2_capacity or not can_measure(target, jug1_capacity, jug2_capacity):
+        return "Target cannot be achieved with the given jug capacities."
+
+    jug1_current = 0
+    jug2_current = 0
+
+    while jug1_current != target:
+        # Fill jug1 if it's empty
+        if jug1_current == 0:
+            jug1_current = jug1_capacity
+            print(f"Fill jug1: ({jug1_current}/{jug2_current})")
+        # Pour water from jug1 to jug2
+        elif jug1_current > 0 and jug2_current < jug2_capacity:
+            transfer_amount = min(jug1_current, jug2_capacity - jug2_current)
+            jug1_current -= transfer_amount
+            jug2_current += transfer_amount
+            print(f"Pour {transfer_amount} from jug1 to jug2: ({jug1_current}/{jug2_current})")
+        # Empty jug2 if it's full
+        elif jug2_current == jug2_capacity:
+            jug2_current = 0
+            print(f"Empty jug2: ({jug1_current}/{jug2_current})")
+
+    print("Target achieved!")
+
+# Example usage:
+water_jug_problem(4, 3, 2)
