@@ -1,0 +1,29 @@
+
+planet(mercury, rocky, 0.39, 0.24).
+planet(venus, rocky, 0.72, 0.62).
+planet(earth, rocky, 1.0, 1.0).
+planet(mars, rocky, 1.52, 1.88).
+planet(jupiter, gas_giant, 5.2, 11.86).
+planet(saturn, gas_giant, 9.58, 29.46).
+planet(uranus, ice_giant, 19.22, 84.01).
+planet(neptune, ice_giant, 30.05, 164.8).
+
+is_rocky(Planet) :-
+    planet(Planet, rocky, _, _),
+    write(Planet), write(' is a rocky planet.'), nl.
+
+is_gas_giant(Planet) :-
+    planet(Planet, gas_giant, _, _),
+    write(Planet), write(' is a gas giant.'), nl.
+
+is_ice_giant(Planet) :-
+    planet(Planet, ice_giant, _, _),
+    write(Planet), write(' is an ice giant.'), nl.
+
+planet_info(Planet) :-
+    planet(Planet, Type, Distance, OrbitPeriod),
+    write('Planet: '), write(Planet), nl,
+    write('Type: '), write(Type), nl,
+    write('Mean Distance from the Sun (AU): '), write(Distance), nl,
+    write('Orbital Period (Earth years): '), write(OrbitPeriod), nl.
+
