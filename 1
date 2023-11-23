@@ -1,0 +1,97 @@
+import heapq
+
+class PuzzleNode:
+    def __init__(self, state, parent=None, move=None, cost=0):
+        self.state = state
+        self.parent = parent
+        self.move = move
+        self.cost = cost
+        self.heuristic = self.calculate_heuristic()
+
+    def __lt__(self, other):
+        return (self.cost + self.heuristic) < (other.cost + other.heuristic)
+
+    def calculate_heuristic(self):
+        # You can implement different heuristics here
+        # For example, Manhattan distance or Hamming distance
+        # For simplicity, we'll use the Hamming distance for this example
+        goal_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+        count = 0
+        for i in range(3):
+            for j in range(3):
+                if self.state[i][j] != goal_state[i][j]:
+                    count += 1
+        return count
+
+    def generate_children(self):
+        children = []
+        empty_i, empty_j = self.find_empty_space()
+        moves = [(0, 1), (0, -1), (1, 0), (-1, 0)]  # Right, Left, Down, Up
+
+        for move in moves:
+            new_i, new_j = empty_i + move[0], empty_j + move[1]
+
+            if 0 <= new_i < 3 and 0 <= new_j < 3:
+                new_state = [row.copy() for row in self.state]
+                new_state[empty_i][empty_j], new_state[new_i][new_j] = new_state[new_i][new_j], new_state[empty_i][empty_j]
+                child_node = PuzzleNode(new_state, self, move, self.cost + 1)
+                children.append(child_node)
+
+        return children
+
+    def find_empty_space(self):
+        for i in range(3):
+            for j in range(3):
+                if self.state[i][j] == 0:
+                    return i, j
+
+    def is_goal(self):
+        goal_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+        return self.state == goal_state
+
+    def get_solution_path(self):
+        path = []
+        current_node = self
+        while current_node:
+            path.append((current_node.state, current_node.move))
+            current_node = current_node.parent
+        return reversed(path)
+
+def solve_puzzle(initial_state):
+    initial_node = PuzzleNode(initial_state)
+    open_set = [initial_node]
+    closed_set = set()
+
+    while open_set:
+        current_node = heapq.heappop(open_set)
+
+        if current_node.is_goal():
+            return current_node.get_solution_path()
+
+        closed_set.add(tuple(map(tuple, current_node.state)))
+
+        children = current_node.generate_children()
+        for child in children:
+            if tuple(map(tuple, child.state)) not in closed_set:
+                heapq.heappush(open_set, child)
+
+    return None
+
+if __name__ == "__main__":
+    initial_state = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+    # Shuffle the puzzle to create a solvable state
+    # You can modify the initial_state to test with different configurations
+    initial_state[2][2] = 5
+    initial_state[2][1] = 8
+    initial_state[2][0] = 7
+
+    solution = solve_puzzle(initial_state)
+
+    if solution:
+        for step, move in enumerate(solution):
+            print(f"Step {step + 1}:")
+            print(move[0])
+            print(f"Move: {move[1]}")
+            print()
+    else:
+        print("No solution found.")
