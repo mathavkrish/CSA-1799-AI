@@ -1,0 +1,10 @@
+
+dob(john, '1990-05-15').
+dob(susan, '1985-12-03').
+dob(mike, '1995-08-22').
+dob(lisa, '1978-04-10').
+
+dob_of(Name, DateOfBirth) :-
+    dob(Name, DateOfBirth),
+    write(Name), write("'s date of birth is "), write(DateOfBirth), nl.
+    
