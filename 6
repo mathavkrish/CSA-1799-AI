@@ -1,0 +1,67 @@
+class VacuumCleaner:
+    def __init__(self, grid_size):
+        self.grid_size = grid_size
+        self.grid = [[0] * grid_size for _ in range(grid_size)]
+        self.position = (0, 0)
+
+    def place_dirty_cells(self, dirty_cells):
+        for cell in dirty_cells:
+            self.grid[cell[0]][cell[1]] = 1
+
+    def print_grid(self):
+        for row in self.grid:
+            print(" ".join(map(str, row)))
+
+    def clean(self):
+        while True:
+            if self.grid[self.position[0]][self.position[1]] == 1:
+                print(f"Cleaning cell at {self.position}")
+                self.grid[self.position[0]][self.position[1]] = 0
+            else:
+                print(f"Cell at {self.position} is already clean")
+
+            move = self.choose_move()
+            if move is None:
+                print("No more dirty cells. Cleaning completed.")
+                break
+
+            self.move(move)
+
+    def choose_move(self):
+        if any(1 in row for row in self.grid):
+            return "clean"
+        elif self.position[1] < self.grid_size - 1:
+            return "right"
+        elif self.position[0] < self.grid_size - 1:
+            return "down"
+        elif self.position[1] > 0:
+            return "left"
+        elif self.position[0] > 0:
+            return "up"
+        else:
+            return None
+
+    def move(self, direction):
+        if direction == "right":
+            self.position = (self.position[0], min(self.position[1] + 1, self.grid_size - 1))
+        elif direction == "down":
+            self.position = (min(self.position[0] + 1, self.grid_size - 1), self.position[1])
+        elif direction == "left":
+            self.position = (self.position[0], max(self.position[1] - 1, 0))
+        elif direction == "up":
+            self.position = (max(self.position[0] - 1, 0), self.position[1])
+
+# Example usage:
+grid_size = 3
+dirty_cells = [(0, 1), (1, 1), (2, 0)]
+vacuum = VacuumCleaner(grid_size)
+vacuum.place_dirty_cells(dirty_cells)
+
+print("Initial Grid:")
+vacuum.print_grid()
+
+print("\nCleaning Process:")
+vacuum.clean()
+
+print("\nFinal Grid:")
+vacuum.print_grid()
