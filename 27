@@ -1,0 +1,45 @@
+
+transition(a, b, 2).
+transition(a, c, 5).
+transition(b, d, 4).
+transition(b, e, 3).
+transition(c, f, 6).
+transition(c, g, 7).
+
+best_first_search(State, Goal, Path, Cost) :-
+    best_first_search_helper([State], Goal, [], 0, Path, Cost).
+
+best_first_search_helper([CurrentState | Path], Goal, Visited, AccCost, ResultPath, ResultCost) :-
+    CurrentState = Goal,
+    reverse([CurrentState | Path], ResultPath),
+    ResultCost is AccCost.
+
+best_first_search_helper([CurrentState | Path], Goal, Visited, AccCost, ResultPath, ResultCost) :-
+    \+ member(CurrentState, Visited),
+    findall(
+        [NextState, CurrentState | Path],
+        (transition(CurrentState, NextState, StepCost), \+ member(NextState, Visited)),
+        NextPaths
+    ),
+    best_next_path(NextPaths, Goal, Visited, AccCost, NewPath, NewCost),
+    best_first_search_helper(NewPath, Goal, [CurrentState | Visited], NewCost, ResultPath, ResultCost).
+
+best_next_path([Path | Paths], Goal, Visited, AccCost, BestPath, BestCost) :-
+    Path = [NextState, _ | _],
+    heuristic(NextState, Goal, H),
+    BestCost is AccCost + H,
+    best_next_path_helper(Paths, Goal, Visited, AccCost, BestPath, BestCost, [Path]).
+
+best_next_path_helper([], _, _, _, BestPath, BestCost, BestPath).
+best_next_path_helper([Path | Paths], Goal, Visited, AccCost, BestPath, BestCost, AccPaths) :-
+    Path = [NextState, _ | _],
+    heuristic(NextState, Goal, H),
+    NewCost is AccCost + H,
+    (NewCost < BestCost ->
+        best_next_path_helper(Paths, Goal, Visited, AccCost, BestPath, BestCost, [Path | AccPaths])
+    ;
+        best_next_path_helper(Paths, Goal, Visited, AccCost, BestPath, BestCost, AccPaths)
+    ).
+
+heuristic(State, Goal, H) :-
+    H is abs(State - Goal).
