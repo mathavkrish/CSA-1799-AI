@@ -1,0 +1,14 @@
+
+color(apple, red).
+color(banana, yellow).
+color(grape, purple).
+color(orange, orange).
+color(strawberry, red).
+
+fruit_color(Fruit, Color) :-
+    color(Fruit, Color).
+
+
+fruits_of_color(Color, Fruits) :-
+    color(Fruit, Color),
+    Fruits = Fruit.
