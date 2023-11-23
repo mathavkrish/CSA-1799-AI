@@ -1,0 +1,21 @@
+
+symptom(john, fever).
+symptom(john, cough).
+symptom(john, headache).
+symptom(susan, sore_throat).
+symptom(susan, fever).
+symptom(susan, fatigue).
+symptom(mike, cough).
+symptom(mike, fatigue).
+
+disease(cold, [fever, cough, headache]).
+disease(flue, [fever, cough, sore_throat, fatigue]).
+disease(unknown, []).
+
+diagnose(Person, Disease) :-
+    symptom(Person, Symptom),
+    check_disease(Symptom, Disease).
+
+check_disease(Symptom, Disease) :-
+    disease(Disease, Symptoms),
+    member(Symptom, Symptoms).
