@@ -1,0 +1,37 @@
+
+at(monkey, door).
+at(banana, floor).
+
+
+push_box(State, NewState) :-
+    State = at(monkey, door),
+    NewState = at(monkey, center).
+
+
+climb_box(State, NewState) :-
+    State = at(monkey, center),
+    NewState = at(monkey, on_box).
+
+grab_banana(State, NewState) :-
+    State = at(monkey, on_box),
+    NewState = has(monkey, banana).
+
+goal_state(has(monkey, banana)).
+
+can_reach(State, NewState, Action) :-
+    push_box(State, NewState),
+    Action = push_box.
+can_reach(State, NewState, Action) :-
+    climb_box(State, NewState),
+    Action = climb_box.
+can_reach(State, NewState, Action) :-
+    grab_banana(State, NewState),
+    Action = grab_banana.
+
+solve(State, Actions) :-
+    goal_state(State),
+    Actions = [].
+solve(State, [Action | Rest]) :-
+    can_reach(State, NextState, Action),
+    solve(NextState, Rest).
+
