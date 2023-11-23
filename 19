@@ -1,0 +1,23 @@
+
+
+teaches(mr_smith, math).
+teaches(mr_jones, physics).
+teaches(mrs_davis, literature).
+
+enrolled(john, math).
+enrolled(john, physics).
+enrolled(susan, literature).
+enrolled(mike, math).
+enrolled(lisa, physics).
+
+
+teacher_for_subject(Subject, Teacher) :-
+    teaches(Teacher, Subject),
+    write('The teacher for '), write(Subject), write(' is '), write(Teacher), nl.
+
+students_for_subject(Subject) :-
+    write('Students enrolled in '), write(Subject), write(':'), nl,
+    enrolled(Student, Subject),
+    write(Student), nl,
+    fail. % Backtrack to find more students
+students_for_subject(_).
