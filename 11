@@ -1,0 +1,32 @@
+from constraint import Problem
+
+def map_coloring_csp():
+    # Create a CSP problem instance
+    problem = Problem()
+
+    # Define variables representing regions (e.g., countries) and their possible colors
+    regions = ["WA", "NT", "SA", "Q", "NSW", "V", "T"]
+    colors = ["Red", "Green", "Blue"]
+
+    # Add variables to the problem with their respective domains
+    for region in regions:
+        problem.addVariable(region, colors)
+
+    # Define constraints: Adjacent regions must have different colors
+    def different_colors(region1, region2):
+        return region1 != region2
+
+    for region1 in regions:
+        for region2 in regions:
+            if region1 != region2:  # Avoid comparing a region with itself
+                problem.addConstraint(different_colors, (region1, region2))
+
+    # Solve the CSP problem
+    solutions = problem.getSolutions()
+
+    # Print the solutions
+    for solution in solutions:
+        print(solution)
+
+if __name__ == "__main__":
+    map_coloring_csp()
