@@ -1,0 +1,16 @@
+
+hanoi(1, Source, Target, _, Moves) :-
+   
+    append([move(Source, Target)], [], Moves).
+hanoi(N, Source, Target, Auxiliary, Moves) :-
+    N1 is N - 1,
+    hanoi(N1, Source, Auxiliary, Target, Moves1),
+
+    append(Moves1, [move(Source, Target)], Moves2),
+    
+    hanoi(N1, Auxiliary, Target, Source, Moves3),
+    
+    append(Moves2, Moves3, Moves).
+
+move(Source, Target) :-
+    write('Move a disk from '), write(Source), write(' to '), write(Target), nl.
