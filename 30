@@ -1,0 +1,34 @@
+
+has_fever(john).
+has_cough(john).
+has_headache(john).
+has_sore_throat(susan).
+has_fever(susan).
+has_fatigue(susan).
+has_cough(mike).
+has_fatigue(mike).
+
+diagnosis(X, flu) :-
+    has_fever(X),
+    has_cough(X),
+    has_sore_throat(X),
+    has_fatigue(X).
+
+diagnosis(X, cold) :-
+    has_fever(X),
+    has_cough(X),
+    has_headache(X).
+
+diagnosis(X, unknown) :-
+    \+ diagnosis(X, flu),
+    \+ diagnosis(X, cold).
+
+has_symptom(X, Symptom) :-
+    diagnosis(X, _), % Trigger backward chaining
+    symptom_check(X, Symptom).
+
+symptom_check(X, fever) :- has_fever(X).
+symptom_check(X, cough) :- has_cough(X).
+symptom_check(X, headache) :- has_headache(X).
+symptom_check(X, sore_throat) :- has_sore_throat(X).
+symptom_check(X, fatigue) :- has_fatigue(X).
