@@ -1,0 +1,18 @@
+
+has_disease(john, diabetes).
+has_disease(lisa, hypertension).
+has_disease(mike, obesity).
+has_disease(susan, celiac_disease).
+has_disease(bob, none).
+
+suggested_diet(diabetes, 'Low-carb, high-fiber diet. Include lean proteins and healthy fats.').
+suggested_diet(hypertension, 'Low-sodium diet. Include fruits, vegetables, and lean proteins.').
+suggested_diet(obesity, 'Calorie-controlled diet. Focus on whole foods and regular exercise.').
+suggested_diet(celiac_disease, 'Gluten-free diet. Avoid wheat, barley, and rye products.').
+suggested_diet(none, 'No specific dietary restrictions. Maintain a balanced diet.').
+
+
+suggest_diet(Person, Diet) :-
+    has_disease(Person, Disease),
+    suggested_diet(Disease, Diet).
+
